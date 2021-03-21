@@ -1,3 +1,4 @@
 Space for python practice
 Make your own folder
+folder name "your name_study"
 Upload matter and solution
