@@ -1,5 +1,10 @@
 import areasplit
+import circle
 
 print("HI")
-a = areasplit.makearea()
-areasplit.splitarea()
+
+#circle.make_circle(4,5)
+
+
+#a = areasplit.makearea()
+#areasplit.splitarea()
