@@ -1,4 +1,5 @@
 import areasplit
 
 print("HI")
-areasplit.makearea()
+a = areasplit.makearea()
+areasplit.splitarea()
