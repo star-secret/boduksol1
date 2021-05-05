@@ -3,3 +3,5 @@ def make_circle(c, r):
     x = r * np.cos(theta)
     y = r * np.sin(theta)    
     return np.vstack((x, y)).T + c
+
+print("hi")
