@@ -28,7 +28,7 @@ max_coverage_percent_section = 0 #section의 커버율이
 #코드 진행
 basic_png = spm.start(area_of_interest_list,[],detect_range)
 basic_png.save_png()
-cp.convert("image_test().png", total_pixel_of_interest)
+cp.convert("image_test0.png", total_pixel_of_interest)
 
 #boundary_list = sa.splitList(sa.getContour(sensor_number))
 
