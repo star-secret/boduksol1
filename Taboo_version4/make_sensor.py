@@ -22,9 +22,6 @@ class area:
         return "(" +str(rand_x) + "," + str(rand_y)+ ")"
 
 
-
-
-
     def propercordinate(self):
         interest_list = []
         sensor_xy = []
