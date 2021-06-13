@@ -57,8 +57,6 @@ print("initial portion:"+str(objportion))
 initial_portion=copy.deepcopy(objportion)
 
 while T>=T_final:
-    if param==1:
-        sensor = mc.move_coordinate(sensor,move)
 
     basic_png.change_sensor(sensor)
     basic_png.save_png()

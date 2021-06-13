@@ -15,7 +15,7 @@ sensorxy = []
 T_init = 60
 T_final = 1
 T = copy.deepcopy(T_init)
-parameter = 100
+parameter = 10
 n=0.99
 
 area_of_interest_list = []
@@ -27,20 +27,25 @@ sc.split_coord1(("(200,200) (600,200) (400,540)").split(' '), area_of_interest_l
 #detect_range = int(input("센서의 탐지범위를 입력하시오.\n")) #센서 탐지범위
 detect_range = 50
 #변하는 값(초기값)
-sensor_number = 3
+sensor_number = 6
 length = 9#move의 숫자열 길이
 move = [] #예시=[[0,1,0,0,1,0,0,1,1],[1,0,0,1,0,0,1,0,1]]
 tempmove = []
 sensor = [] #예시=[[100,200],[200,300]]
 tempsensor = []
-param = 0
 count = 0
 
 #관심영역의 총 픽셀 계산
 basic_png = spm.start(area_of_interest_list,[],detect_range)
 basic_png.save_png()
 total_pixel_of_interest = cp.convert_return_count("image_test0.png")
-print(total_pixel_of_interest)
+
+ideal_portion = round(sensor_number*(detect_range ** 2)*math.pi/(total_pixel_of_interest/100),2)
+if ideal_portion > 100:
+    ideal_portion = 100
+print("이상적인 커버율:")
+print(ideal_portion)
+
 for i in range(sensor_number):
     sensor.append(msp.area(area_of_interest_list).propercordinate())
 
@@ -58,80 +63,36 @@ print("initial portion:"+str(objportion))
 initial_portion=copy.deepcopy(objportion)
 
 while T>=T_final:
-    '''
-    if param==1:
-        sensor = mc.move_coordinate(sensor,move)
-    #print("센서:")
-    #print(sensor)
-    '''
-    basic_png.change_sensor(sensor)
-    basic_png.save_png()
-    count+=1
-    obj = cp.convert_return_count("image_test"+str(count)+".png")
-    #print(obj)
-    objportion = cp.convert_return_portion(obj, total_pixel_of_interest)
-    #print(str(count)+". objportion:"+str(objportion))
-
-
-    #print("센서:")
-    #print(sensor)
     tempsensor = copy.deepcopy(sensor)
     tempsensor = mc.move_coordinate(tempsensor,tempmove)
-    print("sensor")
-    for i in range(sensor_number):
-        print("카운트 :")
-        print(count)
-        print("안에있나?:")
-        print(sl.inner_discrimination(area_of_interest_list, sensor[i]))
-    #print("temp센서:")
-    #print(tempsensor)
-    #print("센서:")
-    #print(sensor)
-    #print(tempobj)
-    #print(str(count)+". tempobjportion:"+str(tempobjportion))
 
-    print("tempsensor")
     for i in range(sensor_number):
         if sl.inner_discrimination(area_of_interest_list,tempsensor[i])==1:
             tempsensor[i]=copy.deepcopy(sensor[i])
-
-        print("카운트 :")
-        print(count)
-        print("안에있나?:")
-        print(sl.inner_discrimination(area_of_interest_list,tempsensor[i]))
 
     basic_png.change_sensor(tempsensor)
     basic_png.save_png()
     count+=1
     tempobj = cp.convert_return_count("image_test"+str(count)+".png")
     tempobjportion = cp.convert_return_portion(tempobj, total_pixel_of_interest)
-    print()
-    print("objportion: ")
-    print(objportion)
-    print("tempobjportion: ")
-    print(tempobjportion)
-    print("exp: ")
-    print(np.exp((tempobjportion - objportion) / T * parameter))
-    print()
 
-    if np.exp((tempobjportion-objportion)/T*parameter)>=float(0.001):
-        #print("exp:"+str(round(np.exp(-(tempobjportion-objportion)/T),5)))
-        #print("count: "+str(count))
-        #print("portion :"+str(tempobjportion))
+
+    if np.exp((tempobjportion-objportion)/T*parameter)>=random():
         sensor = copy.deepcopy(tempsensor)
         move = copy.deepcopy(tempmove)
         fin_count=copy.deepcopy(count)
-        param = 1
-    else:
-        param = 0
+        obj = tempobj
+        objportion = tempobjportion
+        print(fin_count)
+
+    if (objportion >= ideal_portion):
+        break
+
     tempmove = move_change.random_nextMove_change1(move)
     T=T*n
 
 obj = cp.convert_return_count("image_test"+str(fin_count)+".png")
 #print(obj)
 objportion = cp.convert_return_portion(obj, total_pixel_of_interest)
-print(fin_count)
 print("final_portion :"+str(objportion))
-print("delta_portion : "+str(objportion-initial_portion))
-
-
+print("delta_portion : "+str(round(objportion-initial_portion,2)))
